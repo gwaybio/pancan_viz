@@ -2,6 +2,8 @@
 
 *Shiny app for exploring latent space of reduced dimensionality pan-cancer data*
 
+https://gregway.shinyapps.io/pancan_plotter/
+
 ## Currently supports:
 
 ### Covariate information visualized with:
