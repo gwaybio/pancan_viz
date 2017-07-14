@@ -7,12 +7,12 @@
 ### Covariate information visualized with:
 
 * Gene expression
-  * [Variational Autoencoder](https://github.com/greenelab/vae_pancan) with 300 features
+  * [Variational Autoencoder](https://github.com/greenelab/vae_pancancer) with 300 features
 
 #### The covariate information currently consists of:
 
 | Covariate | Description | E.g. |
-|: ------- :|: --------- :|: -- :|
+| :-------: | :---------: | :--: |
 | acronym | cancer-type official TCGA symbol | GBM |
 | sample type | type of tumor profiled | Metastatic |
 | disease | full name of acronym | Glioblastoma |
