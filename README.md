@@ -2,6 +2,6 @@
  
 Repository for various visualization schemes for TCGA pan-cancer data
 
-* pancan_plotter/ - shiny app for visualizing reduced dimensionality pancancer data
+* ./pancan_plotter/ - shiny app for visualizing reduced dimensionality pancancer data
   * https://gregway.shinyapps.io/pancan_plotter/
 
