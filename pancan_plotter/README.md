@@ -31,3 +31,11 @@ https://gregway.shinyapps.io/pancan_plotter/
 | analysis center | where the data was processed/analyzed | UNC |
 | year of diagnosis | when the patient was first diagnosed | 2003 |
 
+## Deployment
+
+_Deployment requires authorized key encryption_
+
+```R
+rsconnect::deployApp("pancan_viz/pancan_plotter")
+```
+
