@@ -7,4 +7,4 @@ Repository for various visualization schemes for TCGA pan-cancer data
 
 *All questions should be filed as issues*
 
-*All contributions are welcome!* Refer to CONTRIBUTING.md
+*All contributions are welcome!* Refer to [CONTRIBUTING.md](.github/CONTRIBUTING.md)
