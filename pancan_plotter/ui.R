@@ -20,8 +20,20 @@ shinyUI(fluidPage(
 
     sidebarPanel(
 
-        helpText("Explore the latent space of pan-cancer gene expression
-                 data according to different covariate information"),
+        helpText("Explore the latent space of pan-cancer genomic data according
+                 to different covariate information and  dimensionality
+                 reduction techniques."),
+
+        selectInput("data",
+                    label = "Choose a data-type to visualize",
+                    choices = c("RNA-seq","Copy Number"),
+                    selected = "RNA-seq"),
+
+        selectInput("algorithm",
+                    label = "Choose an algorithm to explore",
+                    choices = c("PCA", "NMF", "t-SNE",
+                                "Variational Autoencoder"),
+                    selected = "PCA"),
 
         selectInput("covariate",
                     label = "Choose a variable to plot",

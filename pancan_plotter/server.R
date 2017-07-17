@@ -27,10 +27,38 @@ shinyServer(function(input, output) {
       y_coord <- paste(input$y_range)
       color_ <- input$covariate
       shape_ <- input$covariate_alt
+      data_type <- input$data
+      algorithm <- input$algorithm
+      
+      if (data_type == "RNA-seq") {
+        base_file <- file.path("data", "RNAseq_")
+      } else if (data_type == "Copy Number") {
+        base_file <- file.path("data", "CopyNumber_")
+      }
+      
+      if (algorithm == "PCA") {
+        base_file <- paste0(base_file, "pca_results.tsv")
+      } else if (algorithm == "NMF") {
+        base_file <- paste0(base_file, "nmf_results.tsv")
+      } else if (algorithm == "t-SNE") {
+        base_file <- paste0(base_file, "tsne_results.tsv")
+      } else if (algorithm == "Variational Autoencoder") {
+        # Only RNAseq data has VAE support
+        base_file <- file.path("data", "combined_clinical_encoded.tsv")
+      }
+      
+      data_df <- readr::read_tsv(base_file)
+      
+      if (algorithm != "Variational Autoencoder") {
+        clinical_col_df <- combined_df[, c(2, 304:ncol(combined_df))]
+        data_df <- dplyr::full_join(data_df,
+                                    clinical_col_df,
+                                    by = c("tcga_id" = "sample_id"))
+      }
 
-      p <- ggplot(combined_df,
-             aes_string(x = combined_df[[x_coord]],
-                        y = combined_df[[y_coord]],
+      p <- ggplot(data_df,
+             aes_string(x = data_df[[x_coord]],
+                        y = data_df[[y_coord]],
                         color = color_)) + 
         xlab(paste("latent dimension", x_coord)) +
         ylab(paste("latent dimension", y_coord)) +
