@@ -33,7 +33,7 @@ shinyUI(fluidPage(
                     label = "Choose an algorithm to explore",
                     choices = c("PCA", "NMF", "t-SNE",
                                 "Variational Autoencoder"),
-                    selected = "PCA"),
+                    selected = "Variational Autoencoder"),
 
         selectInput("covariate",
                     label = "Choose a variable to plot",
@@ -57,14 +57,14 @@ shinyUI(fluidPage(
                      label = "Enter x coordinate:",
                      value = 1,
                      min = 1,
-                     max = 300,
+                     max = 100,
                      step = 1),
 
         sliderInput("y_range",
                      label = "Enter y coordinate:",
                      value = 2,
                      min = 1, 
-                     max = 300,
+                     max = 100,
                      step = 1)
         ),
     # Show a plot of the generated distribution
