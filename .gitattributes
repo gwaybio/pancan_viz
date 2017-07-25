@@ -5,3 +5,4 @@ pancan_plotter/data/CopyNumber_tsne_results.tsv filter=lfs diff=lfs merge=lfs -t
 pancan_plotter/data/RNAseq_nmf_results.tsv filter=lfs diff=lfs merge=lfs -text
 pancan_plotter/data/RNAseq_pca_results.tsv filter=lfs diff=lfs merge=lfs -text
 pancan_plotter/data/RNAseq_tsne_results.tsv filter=lfs diff=lfs merge=lfs -text
+pancan_plotter/data/data_feature_encodings.tsv filter=lfs diff=lfs merge=lfs -text
