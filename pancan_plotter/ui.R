@@ -65,7 +65,11 @@ shinyUI(fluidPage(
                      value = 2,
                      min = 1, 
                      max = 100,
-                     step = 1)
+                     step = 1),
+        
+        checkboxInput("interactive",
+                      label = "3D Interactive",
+                      value = FALSE)
         ),
     # Show a plot of the generated distribution
     mainPanel(

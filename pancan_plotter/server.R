@@ -11,16 +11,64 @@ suppressMessages(library(shiny))
 suppressMessages(library(readr))
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
+suppressMessages(library(threejs))
 
+# Load the combined data frame where columns are different data and algorithms
 combined_df <- suppressMessages(
   suppressWarnings(
-    readr::read_tsv(file.path("data", "combined_clinical_encoded.tsv"))
+    readr::read_tsv(file.path("data", "data_feature_encodings.tsv"))
     )
   )
+
+# Load offician 
+tcga_colors <- suppressMessages(
+  suppressWarnings(
+    readr::read_tsv(file.path("data", "tcga_colors.tsv"))
+  )
+)
+
+tcga_colors <- tcga_colors[order(tcga_colors$`Study Abbreviation`), ]
+match_colors <- match(combined_df$acronym, tcga_colors$`Study Abbreviation`)
+combined_df$colors <- tcga_colors$`Hex Colors`[match_colors]
+
+palette_order <- c("BRCA",
+                   "PRAD", "TGCT", "KICH", "KIRP", "KIRC", "BLCA",
+                   "OV", "UCS", "CESC", "UCEC",
+                   "THCA", "PCPG", "ACC",
+                   "SKCM",
+                   "UVM", "HNSC",
+                   "SARC",
+                   "ESCA", "STAD", "COAD", "READ",
+                   "CHOL", "PAAD", "LIHC",
+                   "DLBC",
+                   "MESO", "LUSC", "LUAD",
+                   "GBM", "LGG",
+                   "LAML", "THYM",
+                   NA)
+
+# Get important column name variables
+major_colums <- c("sample_id", "platform", "portion_id", "age_at_diagnosis",
+                  "stage", "vital_status", "race", "acronym", "disease",
+                  "organ", "drug", "ethnicity", "percent_tumor_nuclei",
+                  "gender", "sample_type", "analysis_center",
+                  "year_of_diagnosis", "colors")
+major_subset_df <- combined_df %>%
+  dplyr::select(which(colnames(combined_df) %in% major_colums))
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
+  
+  # output$threejs <- renderScatterplotThree({
+  #   if (input$interactive) {
+  #     scatterplot3js(x = plot_df$`1`, y = plot_df$`2`,
+  #                    z = plot_df$`3`, color = plot_df$colors, 
+  #                    renderer = 'webgl', labels = plot_df$acronym,
+  #                    size = 0.2)
+  #   }
+  # })
+  # 
+  
   output$pancanplot <- renderPlot(
     {
       x_coord <- paste(input$x_range)
@@ -29,37 +77,38 @@ shinyServer(function(input, output) {
       shape_ <- input$covariate_alt
       data_type <- input$data
       algorithm <- input$algorithm
+      interactive <- input$interactive
       
+      base_head <- ""
+      # Build column name subsets
       if (data_type == "RNA-seq") {
-        base_file <- file.path("data", "RNAseq_")
+        base_head <- "_rna_"
       } else if (data_type == "Copy Number") {
-        base_file <- file.path("data", "CopyNumber_")
+        base_head <- "_copy_"
       }
       
       if (algorithm == "PCA") {
-        base_file <- paste0(base_file, "pca_results.tsv")
+        base_head <- paste0(base_head, "pca")
       } else if (algorithm == "NMF") {
-        base_file <- paste0(base_file, "nmf_results.tsv")
+        base_head <- paste0(base_head, "nmf")
       } else if (algorithm == "t-SNE") {
-        base_file <- paste0(base_file, "tsne_results.tsv")
+        base_head <- paste0(base_head, "tsne")
       } else if (algorithm == "Variational Autoencoder") {
         # Only RNAseq data has VAE support
-        base_file <- file.path("data", "combined_clinical_encoded.tsv")
+        base_head <- paste0(base_head, "vae")
       }
       
-      data_df <- readr::read_tsv(base_file)
+      # Select column subsets
+      plot_df <- combined_df %>% select_if(grepl(base_head, colnames(.)))
+      colnames(plot_df) <- 1:ncol(plot_df)
       
-      if (algorithm != "Variational Autoencoder") {
-        clinical_col_df <- combined_df[, c(2, 304:ncol(combined_df))]
-        data_df <- dplyr::full_join(data_df,
-                                    clinical_col_df,
-                                    by = c("tcga_id" = "sample_id"))
-      }
+      # Combine with important info from combined
+      plot_df <- dplyr::bind_cols(plot_df, major_subset_df)
 
-      p <- ggplot(data_df,
-             aes_string(x = data_df[[x_coord]],
-                        y = data_df[[y_coord]],
-                        color = color_)) + 
+      p <- ggplot(plot_df,
+                  aes_string(x = plot_df[[x_coord]],
+                             y = plot_df[[y_coord]],
+                             color = color_)) + 
         xlab(paste("latent dimension", x_coord)) +
         ylab(paste("latent dimension", y_coord)) +
         theme_bw()
@@ -70,7 +119,12 @@ shinyServer(function(input, output) {
         p <- p + geom_point()
       }
       
+      if (color_ == 'acronym') {
+        p <- p + scale_colour_manual(limits = tcga_colors$`Study Abbreviation`,
+                                     values = tcga_colors$`Hex Colors`,
+                                     na.value = 'black',
+                                     breaks = palette_order)
+      }
       print(p)
   })
-  
 })
