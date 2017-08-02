@@ -20,7 +20,7 @@ https://gregway.shinyapps.io/pancan_plotter/
 | disease | full name of acronym | Glioblastoma |
 | organ | organ site of tumor | Brain |
 | vital status | if patient is alive | Alive/Dead |
-| age at diagnosis | age when diagnosed | 75 |
+| age at diagnosis | age when diagnosed | (70, 75] |
 | stage | tumor stage when diagnosed | Stage IV |
 | percent tumor nuclei | Pathologist graded purity of excised tumor | 95 |
 | drug | drug(s) the patient recieved as treatment | Doxorubicin |
@@ -29,7 +29,7 @@ https://gregway.shinyapps.io/pancan_plotter/
 | ethnicity | ethnicity of the patient | Hispanic or Latino |
 | platform | gene expression platform used | Illumina HiSeq |
 | analysis center | where the data was processed/analyzed | UNC |
-| year of diagnosis | when the patient was first diagnosed | 2003 |
+| year of diagnosis | when the patient was first diagnosed | (2003 - 2007] |
 
 ## Deployment
 

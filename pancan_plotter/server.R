@@ -16,7 +16,8 @@ suppressMessages(library(threejs))
 # Load the combined data frame where columns are different data and algorithms
 combined_df <- suppressMessages(
   suppressWarnings(
-    readr::read_tsv(file.path("data", "data_feature_encodings.tsv"))
+    readr::read_tsv(file.path("data", "data_feature_encodings.tsv"),
+                    col_types = cols(year_of_diagnosis = col_character()))
     )
   )
 
@@ -158,7 +159,7 @@ shinyServer(function(input, output) {
   output$download <- downloadHandler(
     filename = function() {
       base <- plot_df()[[2]]
-      base <- paste0(base, x_coord(), "_", y_coord())
+      base <- paste(base, x_coord(), y_coord(), color_(), sep = "_")
       paste0("pancan_plot", base, ".", input$filetype)
     },
 
