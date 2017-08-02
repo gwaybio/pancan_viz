@@ -13,7 +13,7 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  titlePanel("Pan Cancer Gene Expression"),
+  titlePanel("Pan Cancer Genomics -- Reduced Dimensions Visualization Tool"),
 
   # Sidebar with interactive layout
   sidebarLayout(
@@ -21,8 +21,8 @@ shinyUI(fluidPage(
     sidebarPanel(
 
         helpText("Explore the latent space of pan-cancer genomic data according
-                 to different covariate information and  dimensionality
-                 reduction techniques."),
+                 to different genomic data, covariate information, and
+                 dimensionality reduction techniques."),
 
         selectInput("data",
                     label = "Choose a data-type to visualize",
@@ -66,14 +66,19 @@ shinyUI(fluidPage(
                      min = 1, 
                      max = 100,
                      step = 1),
-        
-        checkboxInput("interactive",
-                      label = "3D Interactive",
-                      value = FALSE)
+
+        radioButtons(inputId = "filetype", label = "Select the file type",
+                     choices = list("png", "pdf"))
+
+       # checkboxInput("interactive",
+       #               label = "3D Interactive",
+       #               value = FALSE)
+
         ),
     # Show a plot of the generated distribution
     mainPanel(
-       plotOutput("pancanplot")
+       plotOutput("pancanplot"),
+       downloadButton(outputId = "download", label = "Download plot")
     )
   )
 ))

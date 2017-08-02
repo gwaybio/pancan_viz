@@ -68,43 +68,108 @@ shinyServer(function(input, output) {
   #   }
   # })
   # 
+
+  # Setup reactive variables
+  plot_df <- reactive({
+    data_type <- input$data
+    algorithm <- input$algorithm
+    #interactive <- input$interactive
+
+    base_head <- ""
+    # Build column name subsets
+    if (data_type == "RNA-seq") {
+      base_head <- "_rna_"
+    } else if (data_type == "Copy Number") {
+      base_head <- "_copy_"
+    }
+    
+    if (algorithm == "PCA") {
+      base_head <- paste0(base_head, "pca")
+    } else if (algorithm == "NMF") {
+      base_head <- paste0(base_head, "nmf")
+    } else if (algorithm == "t-SNE") {
+      base_head <- paste0(base_head, "tsne")
+    } else if (algorithm == "Variational Autoencoder") {
+      # Only RNAseq data has VAE support
+      base_head <- paste0(base_head, "vae")
+    }
+    
+    # Select column subsets
+    plot_df <- combined_df %>% select_if(grepl(base_head, colnames(.)))
+    colnames(plot_df) <- 1:ncol(plot_df)
+    
+    # Combine with important info from combined
+    plot_df <- dplyr::bind_cols(plot_df, major_subset_df)
+    list(plot_item = plot_df, base_name = base_head)
+  })
   
+  x_coord <- reactive({
+    paste(input$x_range)
+  })
+
+  y_coord <- reactive({
+    paste(input$y_range)
+  })
+
+  color_ <- reactive({
+    input$covariate
+  })
+
+  shape_ <- reactive({
+    input$covariate_alt
+  })
+
+  # interactive <- reactive({
+  #   input$interactive
+  # })
+
   output$pancanplot <- renderPlot(
     {
-      x_coord <- paste(input$x_range)
-      y_coord <- paste(input$y_range)
-      color_ <- input$covariate
-      shape_ <- input$covariate_alt
-      data_type <- input$data
-      algorithm <- input$algorithm
-      interactive <- input$interactive
-      
-      base_head <- ""
-      # Build column name subsets
-      if (data_type == "RNA-seq") {
-        base_head <- "_rna_"
-      } else if (data_type == "Copy Number") {
-        base_head <- "_copy_"
-      }
-      
-      if (algorithm == "PCA") {
-        base_head <- paste0(base_head, "pca")
-      } else if (algorithm == "NMF") {
-        base_head <- paste0(base_head, "nmf")
-      } else if (algorithm == "t-SNE") {
-        base_head <- paste0(base_head, "tsne")
-      } else if (algorithm == "Variational Autoencoder") {
-        # Only RNAseq data has VAE support
-        base_head <- paste0(base_head, "vae")
-      }
-      
-      # Select column subsets
-      plot_df <- combined_df %>% select_if(grepl(base_head, colnames(.)))
-      colnames(plot_df) <- 1:ncol(plot_df)
-      
-      # Combine with important info from combined
-      plot_df <- dplyr::bind_cols(plot_df, major_subset_df)
+      plot_df <- plot_df()[[1]]
+      x_coord <- x_coord()
+      y_coord <- y_coord()
+      color_ <- color_()
+      shape_ <- shape_()
 
+      p <- ggplot(plot_df,
+                  aes_string(x = plot_df[[x_coord]],
+                             y = plot_df[[y_coord]],
+                             color = color_)) + 
+        xlab(paste("latent dimension", x_coord)) +
+        ylab(paste("latent dimension", y_coord)) +
+        theme_bw() +
+        theme(text = element_text(size = 20))
+      
+      if (shape_ != "None") {
+        p <- p + geom_point(aes_string(shape = shape_))
+      } else {
+        p <- p + geom_point()
+      }
+      
+      if (color_ == 'acronym') {
+        p <- p + scale_colour_manual(limits = tcga_colors$`Study Abbreviation`,
+                                     values = tcga_colors$`Hex Colors`,
+                                     na.value = 'black',
+                                     breaks = palette_order)
+      }
+      print(p)
+  })
+  
+  output$download <- downloadHandler(
+    filename = function() {
+      base <- plot_df()[[2]]
+      base <- paste0(base, x_coord(), "_", y_coord())
+      paste0("pancan_plot", base, ".", input$filetype)
+    },
+
+    content = function(file) {
+      # same as renderplot
+      plot_df <- plot_df()[[1]]
+      x_coord <- x_coord()
+      y_coord <- y_coord()
+      color_ <- color_()
+      shape_ <- shape_()
+      
       p <- ggplot(plot_df,
                   aes_string(x = plot_df[[x_coord]],
                              y = plot_df[[y_coord]],
@@ -125,6 +190,7 @@ shinyServer(function(input, output) {
                                      na.value = 'black',
                                      breaks = palette_order)
       }
-      print(p)
-  })
+      p + ggsave(file, width = 6, height = 5)
+    }
+  )
 })
