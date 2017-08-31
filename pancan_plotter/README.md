@@ -9,7 +9,12 @@ https://gregway.shinyapps.io/pancan_plotter/
 ### Covariate information visualized with:
 
 * Gene expression
-  * [Variational Autoencoder](https://github.com/greenelab/vae_pancancer) with 300 features
+  * [Variational Autoencoder](https://github.com/greenelab/vae_pancancer) with 100 features
+  * ADAGE (Denoising Autoencoder) with 100 features
+  * PCA (top 100 components)
+  * ICA (top 100 components)
+  * NMF with 100 feautres
+  * t-SNE with 2 features
 
 #### The covariate information currently consists of:
 
