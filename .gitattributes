@@ -1,1 +1,1 @@
-pancan_plotter/data/data_2hidden_feature_encodings.tsv filter=lfs diff=lfs merge=lfs -text
+pancan_plotter/data/data_feature_encodings.tsv filter=lfs diff=lfs merge=lfs -text
