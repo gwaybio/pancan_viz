@@ -86,6 +86,8 @@ shinyServer(function(input, output) {
 
     if (algorithm == "PCA") {
       base_head <- paste0(base_head, "pca")
+    } else if (algorithm == "ICA") {
+      base_head <- paste0(base_head, "ica")
     } else if (algorithm == "NMF") {
       base_head <- paste0(base_head, "nmf")
     } else if (algorithm == "t-SNE") {

@@ -31,7 +31,7 @@ shinyUI(fluidPage(
 
         selectInput("algorithm",
                     label = "Choose an algorithm to explore",
-                    choices = c("PCA", "NMF", "t-SNE", "ADAGE",
+                    choices = c("PCA", "ICA", "NMF", "t-SNE", "ADAGE",
                                 "Variational Autoencoder"),
                     selected = "Variational Autoencoder"),
 
