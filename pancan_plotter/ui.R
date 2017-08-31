@@ -26,12 +26,12 @@ shinyUI(fluidPage(
 
         selectInput("data",
                     label = "Choose a data-type to visualize",
-                    choices = c("RNA-seq","Copy Number"),
+                    choices = c("RNA-seq"),  # Copy Number Coming Soon
                     selected = "RNA-seq"),
 
         selectInput("algorithm",
                     label = "Choose an algorithm to explore",
-                    choices = c("PCA", "NMF", "t-SNE",
+                    choices = c("PCA", "NMF", "t-SNE", "ADAGE",
                                 "Variational Autoencoder"),
                     selected = "Variational Autoencoder"),
 

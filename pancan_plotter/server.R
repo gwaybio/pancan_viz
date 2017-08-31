@@ -83,7 +83,7 @@ shinyServer(function(input, output) {
     } else if (data_type == "Copy Number") {
       base_head <- "_copy_"
     }
-    
+
     if (algorithm == "PCA") {
       base_head <- paste0(base_head, "pca")
     } else if (algorithm == "NMF") {
@@ -93,8 +93,11 @@ shinyServer(function(input, output) {
     } else if (algorithm == "Variational Autoencoder") {
       # Only RNAseq data has VAE support
       base_head <- paste0(base_head, "vae")
+    } else if (algorithm == "ADAGE") {
+      # Only RNAseq data has ADAGE support
+      base_head <- paste0(base_head, "adage")
     }
-    
+
     # Select column subsets
     plot_df <- combined_df %>% select_if(grepl(base_head, colnames(.)))
     colnames(plot_df) <- 1:ncol(plot_df)
