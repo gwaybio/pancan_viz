@@ -1,5 +1,5 @@
 pancan_plotter/data/data_feature_encodings.tsv filter=lfs diff=lfs merge=lfs -text
-data/ica_rnaseq.tsv.tar.gz filter=lfs diff=lfs merge=lfs -text
-data/nmf_rnaseq.tsv.tar.gz filter=lfs diff=lfs merge=lfs -text
-data/pancan_scaled_rnaseq_shuffled_ids.tsv.tar.gz filter=lfs diff=lfs merge=lfs -text
-data/pca_rnaseq.tsv.tar.gz filter=lfs diff=lfs merge=lfs -text
+data/ica_rnaseq.tsv.gz filter=lfs diff=lfs merge=lfs -text
+data/nmf_rnaseq.tsv.gz filter=lfs diff=lfs merge=lfs -text
+data/pancan_scaled_rnaseq_shuffled_ids.tsv.gz filter=lfs diff=lfs merge=lfs -text
+data/pca_rnaseq.tsv.gz filter=lfs diff=lfs merge=lfs -text
